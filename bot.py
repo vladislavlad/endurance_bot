@@ -72,13 +72,19 @@ def send_meme(chat_id):
             bot.send_photo(chat_id, photoUrl)
 
 
+
+@bot.message_handler(commands=['kavo'])
+def kavo(message):
+    bot.reply_to(message, '/kavo')
+
+
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     bot.reply_to(message, f'Hello, I\'m bot Endurance', reply_markup=board)
 
 
 @bot.message_handler(commands=['htop'])
-def send_welcome(message):
+def send_htop(message):
     try:
         file = open(htop_html, 'w+')
         pipe = open(pipe_path, 'w+')
