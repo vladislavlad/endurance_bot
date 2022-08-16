@@ -32,7 +32,9 @@ ha_replies = [
 board = telebot.types.ReplyKeyboardMarkup()
 board.row('UUID 🔤', 'Time ⏰', 'Photo 📷')
 board.row('Random 🔢', 'Cube 🎲', 'Ping 🏓')
-board.row('Meme 😀')
+board.row('Money 💵', 'Meme 😀', 'Hide')
+
+hideBoard = telebot.types.ReplyKeyboardRemove(selective=False)
 
 
 def push_msg(chat_id, msg):
@@ -75,12 +77,14 @@ def send_meme(chat_id):
 
 @bot.message_handler(commands=['kavo'])
 def kavo(message):
-    bot.reply_to(message, '/kavo')
+    bot.send_message(message.chat.id, '/kavo')
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     bot.reply_to(message, f'Hello, I\'m bot Endurance', reply_markup=board)
+    
+    
 
 
 @bot.message_handler(commands=['htop'])
@@ -136,14 +140,20 @@ def get_text_messages(message):
     elif "cube 🎲" in text:
         bot.send_message(chat_id, random.randint(1, 6))
 
-    elif "ping 🏓" in text:
-        bot.send_message(chat_id, "pong")
+    elif ("ping 🏓" in text) or ("ping" in text):
+        bot.send_message(chat_id, "/pong")
 
     elif "time ⏰" in text:
         bot.send_message(chat_id, datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+        
+    elif "money 💵" in text: 
+        bot.send_message(chat_id, "You received ${}".format(random.randint(1, 100) * 100))
 
     elif ("photo" in text) or ("фото" in text):
         send_photo(chat_id)
+        
+    elif ("hide" in text): 
+    	bot.send_message(chat_id, "These aren't the Droids you're looking for...✋", reply_markup=hideBoard)
 
     elif re.match(r"(.*\s+)?(мем|meme)(.*\s+)?", text):
         send_meme(chat_id)
