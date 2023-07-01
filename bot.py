@@ -4,10 +4,10 @@ import urllib.request, json, yaml
 from subprocess import Popen, PIPE
 
 with open("config.yaml", "r") as yml_c:
-    config = yaml.load(yml_c)
+    config = yaml.safe_load(yml_c)
 
 with open('secret.yaml', 'r') as yml_s:
-    secret = yaml.load(yml_s)
+    secret = yaml.safe_load(yml_s)
 
 bot = telebot.TeleBot(secret['api_token'])
 
@@ -74,7 +74,6 @@ def send_meme(chat_id):
             bot.send_photo(chat_id, photoUrl)
 
 
-
 @bot.message_handler(commands=['kavo'])
 def kavo(message):
     bot.send_message(message.chat.id, '/kavo')
@@ -83,8 +82,6 @@ def kavo(message):
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     bot.reply_to(message, f'Hello, I\'m bot Endurance', reply_markup=board)
-    
-    
 
 
 @bot.message_handler(commands=['htop'])
@@ -145,15 +142,15 @@ def get_text_messages(message):
 
     elif "time ⏰" in text:
         bot.send_message(chat_id, datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-        
-    elif "money 💵" in text: 
+
+    elif "money 💵" in text:
         bot.send_message(chat_id, "You received ${}".format(random.randint(1, 100) * 100))
 
     elif ("photo" in text) or ("фото" in text):
         send_photo(chat_id)
-        
-    elif ("hide" in text): 
-    	bot.send_message(chat_id, "These aren't the Droids you're looking for...✋", reply_markup=hideBoard)
+
+    elif ("hide" in text):
+        bot.send_message(chat_id, "These aren't the Droids you're looking for...✋", reply_markup=hideBoard)
 
     elif re.match(r"(.*\s+)?(мем|meme)(.*\s+)?", text):
         send_meme(chat_id)
@@ -170,9 +167,6 @@ def get_text_messages(message):
 
     elif "pop" == text.strip():
         pop_msg(chat_id)
-
-    elif "что дальше" in text:
-        bot.send_message(chat_id, "Дальше - больше")
 
     elif "да" in text:
         bot.send_message(chat_id, "И что дальше?")
